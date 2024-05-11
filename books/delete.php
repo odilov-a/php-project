@@ -1,15 +1,13 @@
 <?php
+require '../db.php';
 
-$mysqli = new mysqli("localhost", "root", "", "library");
-if ($mysqli->connect_errno) {
-    echo "MySQLga ulana olmadi: " . $mysqli->connect_error;
-}
-
-$id = intval($_GET['id']);
-
-$query = "DELETE FROM talaba WHERE id=$id";
-
-if ($result = $mysqli->query($query)) {
-    echo "O'chirildi";
-    header("Refresh: 3; URL='/baza_list.php'");
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
+    $book_id = $_GET['id'];
+    $sql = "DELETE FROM books WHERE id = $book_id";
+    if ($conn->query($sql) === TRUE) {
+        echo "Book deleted successfully";
+        header("Refresh:1; url=index.php");
+    } else {
+        echo "Error deleting book: " . $conn->error;
+    }
 }

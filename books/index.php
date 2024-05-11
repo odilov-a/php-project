@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
-
+<?php
+  require '../db.php';
+?>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,7 +22,8 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown" style="margin-left:57%">
         <ul class="navbar-nav">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+              style="color:white;">
               Authors
             </a>
             <ul class="dropdown-menu">
@@ -28,7 +31,8 @@
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+              style="color:white;">
               Categories
             </a>
             <ul class="dropdown-menu">
@@ -45,19 +49,59 @@
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:white;">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+              style="color:white;">
               Books
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="../books/index.php">Books List</a></li>
+              <li><a class="dropdown-item" href="../books/create.php">Books Create</a></li>
             </ul>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-  <div class="container"><br/>
-  <h2>books list</h2>
+  <div class="container"><br />
+    <h2>books list</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Book name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Pages quantity</th>
+          <th scope="col">Image</th>
+          <th scope="col">Year</th>
+          <th scope="col">Category</th>
+          <th scope="col">Languages</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $sql = "SELECT b.*, c.title as ctitle, l.name as lname FROM books b, category c, languages l WHERE b.category_id = c.id AND b.language_id = l.id";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+          while ($row = $result->fetch_assoc()) {
+            echo '<tr>';
+            echo '<th scope="row">' . $row["id"] . '</th>';
+            echo '<td>' . $row["title"] . '</td>';
+            echo '<td>' . $row["description"] . '</td>';
+            echo '<td>' . $row["pages"] . '</td>';
+            echo '<td>' . $row["image"] . '</td>';
+            echo '<td>' . $row["year"] . '</td>';
+            echo '<td>' . $row["ctitle"] . '</td>';
+            echo '<td>' . $row["lname"] . '</td>';
+            echo '<td><a href="edit.php?id=' . $row["id"] . '">Edit</a> | <a href="delete.php?id=' . $row["id"] . '">Delete</a></td>';
+            echo '</tr>';
+          }
+        } else {
+          echo '<tr><td colspan="3">0 results</td></tr>';
+        }
+        ?>
+      </tbody>
+    </table>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
